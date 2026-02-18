@@ -23,9 +23,17 @@ A native macOS rewrite of [Transmission Remote GUI](https://github.com/transmiss
 - **Xcode**: 15.0+ (or Swift 5.9 toolchain).
 - **Transmission**: A running Transmission daemon with RPC enabled.
 
-## 📦 Getting Started
+## 📦 Installation & Getting Started
 
-### Open in Xcode
+### Download DMG (Recommended)
+You can download the latest pre-built version from the **[Releases](https://github.com/K-Asimov/tm-client/releases)** page.
+1. Go to the [Latest Release](https://github.com/K-Asimov/tm-client/releases/latest).
+2. Download `TMClientApp.dmg`.
+3. Open the `.dmg` file and drag **TMClientApp** to your **Applications** folder.
+*Note: Since the app is not notarized, you may need to right-click the app and select "Open" for the first time.*
+
+### Build from Source
+#### Open in Xcode
 1. Double-click `Package.swift` or open the root folder in Xcode.
 2. Select the `TMClientApp` scheme.
 3. Press `Cmd + R` to build and run.
