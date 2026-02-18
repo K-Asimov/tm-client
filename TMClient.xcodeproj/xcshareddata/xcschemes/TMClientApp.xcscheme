@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AA0000000000000000000101"
-               BuildableName = "Transmission Remote GUI.app"
+               BuildableName = "TMClientApp.app"
                BlueprintName = "TMClientApp"
                ReferencedContainer = "container:TMClient.xcodeproj">
             </BuildableReference>
@@ -44,7 +44,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AA0000000000000000000101"
-            BuildableName = "Transmission Remote GUI.app"
+            BuildableName = "TMClientApp.app"
             BlueprintName = "TMClientApp"
             ReferencedContainer = "container:TMClient.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AA0000000000000000000101"
-            BuildableName = "Transmission Remote GUI.app"
+            BuildableName = "TMClientApp.app"
             BlueprintName = "TMClientApp"
             ReferencedContainer = "container:TMClient.xcodeproj">
          </BuildableReference>
