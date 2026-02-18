@@ -1,0 +1,454 @@
+// !$*UTF8*$!
+{
+    archiveVersion = 1;
+    classes = {
+    };
+    objectVersion = 56;
+    objects = {
+
+/* Begin PBXBuildFile section */
+        AA0000000000000000001000 /* TMClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002000 /* TMClientApp.swift */; };
+        AA0000000000000000001001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002001 /* ContentView.swift */; };
+        AA0000000000000000001003 /* TorrentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002003 /* TorrentDetailView.swift */; };
+        AA0000000000000000001004 /* TorrentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002004 /* TorrentRowView.swift */; };
+        AA0000000000000000001006 /* TrackerEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002006 /* TrackerEditorView.swift */; };
+        AA0000000000000000001007 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002007 /* PreferencesView.swift */; };
+        AA0000000000000000001008 /* AddTorrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002008 /* AddTorrentView.swift */; };
+        AA0000000000000000001009 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002009 /* SettingsStore.swift */; };
+        AA000000000000000000100A /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000200A /* AppViewModel.swift */; };
+        AA000000000000000000100B /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000200B /* KeychainStore.swift */; };
+        AA000000000000000000100C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002016 /* Assets.xcassets */; };
+        AA000000000000000000100D /* TMCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0000000000000000003011 /* TMCore.framework */; };
+        AA000000000000000000100E /* TMCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0000000000000000003011 /* TMCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+        AA0000000000000000001100 /* JSONValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002100 /* JSONValue.swift */; };
+        AA0000000000000000001101 /* TorrentTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002101 /* TorrentTracker.swift */; };
+        AA0000000000000000001102 /* RPCConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002102 /* RPCConnection.swift */; };
+        AA0000000000000000001103 /* SessionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002103 /* SessionSettings.swift */; };
+        AA0000000000000000001104 /* RPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002104 /* RPCClient.swift */; };
+        AA0000000000000000001105 /* RPCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002105 /* RPCError.swift */; };
+        AA0000000000000000001106 /* TorrentFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002106 /* TorrentFile.swift */; };
+        AA0000000000000000001107 /* SessionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002107 /* SessionInfo.swift */; };
+        AA0000000000000000001108 /* TorrentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002108 /* TorrentDetail.swift */; };
+        AA0000000000000000001109 /* Torrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000002109 /* Torrent.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+        AA0000000000000000004000 /* PBXContainerItemProxy */ = {
+            isa = PBXContainerItemProxy;
+            containerPortal = AA0000000000000000000001 /* Project object */;
+            proxyType = 1;
+            remoteGlobalIDString = AA0000000000000000000102;
+            remoteInfo = TMCore;
+        };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+        AA0000000000000000002000 /* TMClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMClientApp.swift; sourceTree = "<group>"; };
+        AA0000000000000000002001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+        AA0000000000000000002003 /* TorrentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorrentDetailView.swift; sourceTree = "<group>"; };
+        AA0000000000000000002004 /* TorrentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorrentRowView.swift; sourceTree = "<group>"; };
+        AA0000000000000000002006 /* TrackerEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEditorView.swift; sourceTree = "<group>"; };
+        AA0000000000000000002007 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+        AA0000000000000000002008 /* AddTorrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTorrentView.swift; sourceTree = "<group>"; };
+        AA0000000000000000002009 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+        AA000000000000000000200A /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+        AA000000000000000000200B /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+        AA0000000000000000002010 /* TMClientApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = TMClientApp-Info.plist; sourceTree = "<group>"; };
+        AA0000000000000000002016 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+        AA0000000000000000002100 /* JSONValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONValue.swift; sourceTree = "<group>"; };
+        AA0000000000000000002101 /* TorrentTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorrentTracker.swift; sourceTree = "<group>"; };
+        AA0000000000000000002102 /* RPCConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCConnection.swift; sourceTree = "<group>"; };
+        AA0000000000000000002103 /* SessionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSettings.swift; sourceTree = "<group>"; };
+        AA0000000000000000002104 /* RPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCClient.swift; sourceTree = "<group>"; };
+        AA0000000000000000002105 /* RPCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCError.swift; sourceTree = "<group>"; };
+        AA0000000000000000002106 /* TorrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorrentFile.swift; sourceTree = "<group>"; };
+        AA0000000000000000002107 /* SessionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInfo.swift; sourceTree = "<group>"; };
+        AA0000000000000000002108 /* TorrentDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorrentDetail.swift; sourceTree = "<group>"; };
+        AA0000000000000000002109 /* Torrent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Torrent.swift; sourceTree = "<group>"; };
+        AA0000000000000000003001 /* TMClientApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = TMClientApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+        AA0000000000000000003011 /* TMCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TMCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+        AA0000000000000000000105 /* Frameworks */ = {
+            isa = PBXFrameworksBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                AA000000000000000000100D /* TMCore.framework in Frameworks */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+        AA000000000000000000010F /* Embed Frameworks */ = {
+            isa = PBXCopyFilesBuildPhase;
+            buildActionMask = 2147483647;
+            dstPath = "";
+            dstSubfolderSpec = 10;
+            files = (
+                AA000000000000000000100E /* TMCore.framework in Embed Frameworks */,
+            );
+            name = "Embed Frameworks";
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXGroup section */
+        AA0000000000000000000005 = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000000006,
+                AA000000000000000000000A,
+                AA0000000000000000002010 /* TMClientApp-Info.plist */,
+            );
+            sourceTree = "<group>";
+        };
+        AA0000000000000000000006 /* Sources */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000000007 /* TMClientApp */,
+                AA0000000000000000000008 /* TMCore */,
+                AA0000000000000000000009 /* Resources */,
+            );
+            path = Sources;
+            sourceTree = "<group>";
+        };
+        AA0000000000000000000007 /* TMClientApp */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000002000 /* TMClientApp.swift */,
+                AA000000000000000000000B /* Views */,
+                AA000000000000000000000C /* ViewModels */,
+            );
+            path = TMClientApp;
+            sourceTree = "<group>";
+        };
+        AA000000000000000000000B /* Views */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000002001 /* ContentView.swift */,
+                AA0000000000000000002003 /* TorrentDetailView.swift */,
+                AA0000000000000000002004 /* TorrentRowView.swift */,
+                AA0000000000000000002006 /* TrackerEditorView.swift */,
+                AA0000000000000000002007 /* PreferencesView.swift */,
+                AA0000000000000000002008 /* AddTorrentView.swift */,
+            );
+            path = Views;
+            sourceTree = "<group>";
+        };
+        AA000000000000000000000C /* ViewModels */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000002009 /* SettingsStore.swift */,
+                AA000000000000000000200A /* AppViewModel.swift */,
+                AA000000000000000000200B /* KeychainStore.swift */,
+            );
+            path = ViewModels;
+            sourceTree = "<group>";
+        };
+        AA0000000000000000000008 /* TMCore */ = {
+            isa = PBXGroup;
+            children = (
+                AA000000000000000000000D /* Models */,
+                AA000000000000000000000E /* RPC */,
+            );
+            path = TMCore;
+            sourceTree = "<group>";
+        };
+        AA000000000000000000000D /* Models */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000002100 /* JSONValue.swift */,
+                AA0000000000000000002101 /* TorrentTracker.swift */,
+                AA0000000000000000002102 /* RPCConnection.swift */,
+                AA0000000000000000002103 /* SessionSettings.swift */,
+                AA0000000000000000002106 /* TorrentFile.swift */,
+                AA0000000000000000002107 /* SessionInfo.swift */,
+                AA0000000000000000002108 /* TorrentDetail.swift */,
+                AA0000000000000000002109 /* Torrent.swift */,
+            );
+            path = Models;
+            sourceTree = "<group>";
+        };
+        AA000000000000000000000E /* RPC */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000002104 /* RPCClient.swift */,
+                AA0000000000000000002105 /* RPCError.swift */,
+            );
+            path = RPC;
+            sourceTree = "<group>";
+        };
+        AA0000000000000000000009 /* Resources */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000002016 /* Assets.xcassets */,
+            );
+            path = TMClientApp/Resources;
+            sourceTree = "<group>";
+        };
+        AA000000000000000000000A /* Products */ = {
+            isa = PBXGroup;
+            children = (
+                AA0000000000000000003001 /* TMClientApp.app */,
+                AA0000000000000000003011 /* TMCore.framework */,
+            );
+            name = Products;
+            sourceTree = "<group>";
+        };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+        AA0000000000000000000101 /* TMClientApp */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = AA0000000000000000000107 /* Build configuration list for PBXNativeTarget "TMClientApp" */;
+            buildPhases = (
+                AA0000000000000000000103 /* Sources */,
+                AA0000000000000000000104 /* Resources */,
+                AA0000000000000000000105 /* Frameworks */,
+                AA000000000000000000010F /* Embed Frameworks */,
+            );
+            buildRules = (
+            );
+            dependencies = (
+                AA0000000000000000000106 /* PBXTargetDependency */,
+            );
+            name = TMClientApp;
+            productName = TMClientApp;
+            productReference = AA0000000000000000003001 /* TMClientApp.app */;
+            productType = "com.apple.product-type.application";
+        };
+        AA0000000000000000000102 /* TMCore */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = AA0000000000000000000207 /* Build configuration list for PBXNativeTarget "TMCore" */;
+            buildPhases = (
+                AA0000000000000000000203 /* Sources */,
+            );
+            buildRules = (
+            );
+            dependencies = (
+            );
+            name = TMCore;
+            productName = TMCore;
+            productReference = AA0000000000000000003011 /* TMCore.framework */;
+            productType = "com.apple.product-type.framework";
+        };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+        AA0000000000000000000001 /* Project object */ = {
+            isa = PBXProject;
+            attributes = {
+                LastSwiftUpdateCheck = 1500;
+                LastSwiftMigration = 1500;
+                TargetAttributes = {
+                    AA0000000000000000000101 = {
+                        CreatedOnToolsVersion = 15.0;
+                    };
+                    AA0000000000000000000102 = {
+                        CreatedOnToolsVersion = 15.0;
+                    };
+                };
+            };
+            buildConfigurationList = AA0000000000000000000002 /* Build configuration list for PBXProject "TMClient" */;
+            compatibilityVersion = "Xcode 15.0";
+            developmentRegion = en;
+            hasScannedForEncodings = 0;
+            knownRegions = (
+                en,
+            );
+            mainGroup = AA0000000000000000000005;
+            productRefGroup = AA000000000000000000000A /* Products */;
+            projectDirPath = "";
+            projectRoot = "";
+            targets = (
+                AA0000000000000000000101 /* TMClientApp */,
+                AA0000000000000000000102 /* TMCore */,
+            );
+        };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+        AA0000000000000000000104 /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                AA000000000000000000100C /* Assets.xcassets in Resources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+        AA0000000000000000000103 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                AA0000000000000000001000 /* TMClientApp.swift in Sources */,
+                AA0000000000000000001001 /* ContentView.swift in Sources */,
+                AA0000000000000000001003 /* TorrentDetailView.swift in Sources */,
+                AA0000000000000000001004 /* TorrentRowView.swift in Sources */,
+                AA0000000000000000001006 /* TrackerEditorView.swift in Sources */,
+                AA0000000000000000001007 /* PreferencesView.swift in Sources */,
+                AA0000000000000000001008 /* AddTorrentView.swift in Sources */,
+                AA0000000000000000001009 /* SettingsStore.swift in Sources */,
+                AA000000000000000000100A /* AppViewModel.swift in Sources */,
+                AA000000000000000000100B /* KeychainStore.swift in Sources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        AA0000000000000000000203 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                AA0000000000000000001100 /* JSONValue.swift in Sources */,
+                AA0000000000000000001101 /* TorrentTracker.swift in Sources */,
+                AA0000000000000000001102 /* RPCConnection.swift in Sources */,
+                AA0000000000000000001103 /* SessionSettings.swift in Sources */,
+                AA0000000000000000001104 /* RPCClient.swift in Sources */,
+                AA0000000000000000001105 /* RPCError.swift in Sources */,
+                AA0000000000000000001106 /* TorrentFile.swift in Sources */,
+                AA0000000000000000001107 /* SessionInfo.swift in Sources */,
+                AA0000000000000000001108 /* TorrentDetail.swift in Sources */,
+                AA0000000000000000001109 /* Torrent.swift in Sources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+        AA0000000000000000000106 /* PBXTargetDependency */ = {
+            isa = PBXTargetDependency;
+            target = AA0000000000000000000102 /* TMCore */;
+            targetProxy = AA0000000000000000004000 /* PBXContainerItemProxy */;
+        };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+        AA0000000000000000000003 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                CLANG_ENABLE_MODULES = YES;
+                CODE_SIGN_STYLE = Automatic;
+                DEBUG_INFORMATION_FORMAT = dwarf;
+                ENABLE_TESTABILITY = YES;
+                MACOSX_DEPLOYMENT_TARGET = 15.0;
+                SDKROOT = macosx;
+                SWIFT_VERSION = 6.0;
+            };
+            name = Debug;
+        };
+        AA0000000000000000000004 /* Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                CLANG_ENABLE_MODULES = YES;
+                CODE_SIGN_STYLE = Automatic;
+                DEBUG_INFORMATION_FORMAT = dwarf;
+                MACOSX_DEPLOYMENT_TARGET = 15.0;
+                SDKROOT = macosx;
+                SWIFT_VERSION = 6.0;
+                SWIFT_OPTIMIZATION_LEVEL = -O;
+            };
+            name = Release;
+        };
+        AA0000000000000000000108 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+                CODE_SIGN_ENTITLEMENTS = TMClientApp.entitlements;
+                CODE_SIGN_STYLE = Automatic;
+                CURRENT_PROJECT_VERSION = 0.1.0;
+                INFOPLIST_FILE = TMClientApp-Info.plist;
+                LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+                MACOSX_DEPLOYMENT_TARGET = 15.0;
+                MARKETING_VERSION = 0.1.0;
+                PRODUCT_BUNDLE_IDENTIFIER = com.tmclient.TransmissionRemoteGUI;
+				PRODUCT_NAME = TMClientApp;
+                SWIFT_VERSION = 6.0;
+            };
+            name = Debug;
+        };
+        AA0000000000000000000109 /* Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+                CODE_SIGN_ENTITLEMENTS = TMClientApp.entitlements;
+                CODE_SIGN_STYLE = Automatic;
+                CURRENT_PROJECT_VERSION = 0.1.0;
+                INFOPLIST_FILE = TMClientApp-Info.plist;
+                LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+                MACOSX_DEPLOYMENT_TARGET = 15.0;
+                MARKETING_VERSION = 0.1.0;
+                PRODUCT_BUNDLE_IDENTIFIER = com.tmclient.TransmissionRemoteGUI;
+				PRODUCT_NAME = TMClientApp;
+                SWIFT_VERSION = 6.0;
+            };
+            name = Release;
+        };
+        AA0000000000000000000208 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                CODE_SIGN_STYLE = Automatic;
+                DEFINES_MODULE = YES;
+                DYLIB_INSTALL_NAME_BASE = "@rpath";
+                GENERATE_INFOPLIST_FILE = YES;
+                MACH_O_TYPE = mh_dylib;
+                MACOSX_DEPLOYMENT_TARGET = 15.0;
+                PRODUCT_BUNDLE_IDENTIFIER = com.tmclient.TMCore;
+                PRODUCT_NAME = TMCore;
+                SKIP_INSTALL = YES;
+                SWIFT_VERSION = 6.0;
+            };
+            name = Debug;
+        };
+        AA0000000000000000000209 /* Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                CODE_SIGN_STYLE = Automatic;
+                DEFINES_MODULE = YES;
+                DYLIB_INSTALL_NAME_BASE = "@rpath";
+                GENERATE_INFOPLIST_FILE = YES;
+                MACH_O_TYPE = mh_dylib;
+                MACOSX_DEPLOYMENT_TARGET = 15.0;
+                PRODUCT_BUNDLE_IDENTIFIER = com.tmclient.TMCore;
+                PRODUCT_NAME = TMCore;
+                SKIP_INSTALL = YES;
+                SWIFT_VERSION = 6.0;
+            };
+            name = Release;
+        };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+        AA0000000000000000000002 /* Build configuration list for PBXProject "TMClient" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                AA0000000000000000000003 /* Debug */,
+                AA0000000000000000000004 /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Debug;
+        };
+        AA0000000000000000000107 /* Build configuration list for PBXNativeTarget "TMClientApp" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                AA0000000000000000000108 /* Debug */,
+                AA0000000000000000000109 /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Debug;
+        };
+        AA0000000000000000000207 /* Build configuration list for PBXNativeTarget "TMCore" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                AA0000000000000000000208 /* Debug */,
+                AA0000000000000000000209 /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Debug;
+        };
+/* End XCConfigurationList section */
+    };
+    rootObject = AA0000000000000000000001 /* Project object */;
+}

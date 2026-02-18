@@ -1,0 +1,78 @@
+name: Build and Release DMG
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggered when a tag starting with 'v' is pushed (e.g., v1.0.0)
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: macos-15
+    # Do not run if [skip release] is included in the commit message
+    if: "!contains(github.event.head_commit.message, '[skip release]')"
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "DMG_NAME=TMClientApp-$VERSION.dmg" >> $GITHUB_ENV
+
+      - name: Set up Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
+      - name: Build App
+        run: |
+          # Build the .app file using the dedicated DMG scheme
+          xcodebuild -project TMClient.xcodeproj \
+                     -scheme TMClientApp-DMG \
+                     -derivedDataPath ./build \
+                     clean build \
+                     CODE_SIGNING_ALLOWED=YES \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGN_IDENTITY="-" \
+                     AD_HOC_CODE_SIGNING_ALLOWED=YES
+
+      - name: Prepare DMG
+        run: |
+          # Find the path of the built .app file in the Release directory
+          APP_PATH=$(find ./build/Build/Products/Release -name "TMClientApp.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Could not find TMClientApp.app"
+            exit 1
+          fi
+          echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
+
+          # Install create-dmg tool
+          brew install create-dmg
+
+      - name: Create DMG
+        run: |
+          # Remove existing dmg file if it exists
+          rm -f "${{ env.DMG_NAME }}"
+
+          # Create the dmg file (customizable design)
+          create-dmg \
+            --volname "TMClient Installation" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "TMClientApp.app" 200 190 \
+            --hide-extension "TMClientApp.app" \
+            --app-drop-link 600 185 \
+            "${{ env.DMG_NAME }}" \
+            "${{ env.APP_PATH }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.DMG_NAME }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
