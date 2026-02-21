@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var showRemoveConfirm = false
     @State private var removeWithData = false
     @State private var pendingRemoveIds: [Int] = []
+    @State private var showCompletedRemoveSheet = false
+    @State private var pendingCompletedRemoveIds: [Int] = []
 
     @State private var sortOrder = TorrentSortOrder.name
     @State private var sortAscending = true
@@ -59,17 +61,6 @@ struct ContentView: View {
             handleDrop(providers)
         }
         .toolbar {
-            ToolbarItem(placement: .navigation) {
-                Menu {
-                    SettingsLink {
-                        Text("Connection Settings…")
-                    }
-                    Button("Connect") { Task { await viewModel.connect() } }
-                } label: {
-                    Label(viewModel.connection.host, systemImage: "server.rack")
-                }
-                .help("Server connection")
-            }
             ToolbarItemGroup(placement: .primaryAction) {
                 Button {
                     showAddTorrent = true
@@ -104,13 +95,11 @@ struct ContentView: View {
                 .help("Pause selected torrents")
 
                 Button {
-                    requestRemove(ids: Array(selected), withData: false)
+                    presentCompletedRemoveSheet()
                 } label: {
                     Label("Remove", systemImage: "trash")
                 }
-                .disabled(selected.isEmpty)
-                .keyboardShortcut(.delete, modifiers: [])
-                .help("Remove selected torrents")
+                .help("Remove all completed torrents from list")
 
                 Button {
                     Task { await viewModel.refresh() }
@@ -157,6 +146,23 @@ struct ContentView: View {
                 .onDisappear { viewModel.resumeAutoRefresh() }
             }
         }
+        .sheet(isPresented: $showCompletedRemoveSheet, onDismiss: {
+            pendingCompletedRemoveIds = []
+        }) {
+            CompletedTorrentRemoveSheet(
+                torrents: pendingCompletedTorrents,
+                onCancel: {
+                    showCompletedRemoveSheet = false
+                },
+                onRemove: { ids in
+                    showCompletedRemoveSheet = false
+                    pendingCompletedRemoveIds = []
+                    Task { await viewModel.remove(ids: ids, deleteLocalData: false) }
+                }
+            )
+            .onAppear { viewModel.pauseAutoRefresh() }
+            .onDisappear { viewModel.resumeAutoRefresh() }
+        }
         .alert("Remove Torrent\(pendingRemoveIds.count > 1 ? "s" : "")?", isPresented: $showRemoveConfirm) {
             Button("Cancel", role: .cancel) {
                 pendingRemoveIds = []
@@ -171,7 +177,13 @@ struct ContentView: View {
             if removeWithData {
                 Text("This will remove \(pendingRemoveIds.count) torrent(s) and permanently delete their downloaded data. This cannot be undone.")
             } else {
-                Text("This will remove \(pendingRemoveIds.count) torrent(s) from the list. Downloaded files will be kept.")
+                Text(
+                    """
+                    This will remove \(pendingRemoveIds.count) torrent(s) from the list. Downloaded files will be kept.
+
+                    \(pendingRemoveNameSummary)
+                    """
+                )
             }
         }
         .alert(viewModel.alertInfo?.title ?? "", isPresented: Binding(
@@ -220,6 +232,8 @@ struct ContentView: View {
                     .keyboardShortcut("4", modifiers: .command)
                 Button("") { showDetail.toggle() }
                     .keyboardShortcut("d", modifiers: [.command, .shift])
+                Button("") { presentCompletedRemoveSheet() }
+                    .keyboardShortcut(.delete, modifiers: [])
             }
             .frame(width: 0, height: 0)
             .opacity(0)
@@ -232,6 +246,16 @@ struct ContentView: View {
         pendingRemoveIds = ids
         removeWithData = withData
         showRemoveConfirm = true
+    }
+
+    private func presentCompletedRemoveSheet() {
+        let completedIds = completedTorrents.map(\.id)
+        guard !completedIds.isEmpty else {
+            viewModel.toast = ToastInfo(message: "No completed torrents to remove", isError: true)
+            return
+        }
+        pendingCompletedRemoveIds = completedIds
+        showCompletedRemoveSheet = true
     }
 
     // MARK: - Drag & Drop
@@ -640,6 +664,28 @@ struct ContentView: View {
         }
     }
 
+    private var completedTorrents: [Torrent] {
+        viewModel.torrents.filter { $0.percentDone >= 1.0 }
+    }
+
+    private var pendingCompletedTorrents: [Torrent] {
+        pendingCompletedRemoveIds.compactMap { id in
+            viewModel.torrents.first(where: { $0.id == id })
+        }
+    }
+
+    private var pendingRemoveNameSummary: String {
+        let names = pendingRemoveIds.compactMap { id in
+            viewModel.torrents.first(where: { $0.id == id })?.name
+        }
+        guard !names.isEmpty else { return "No torrents selected." }
+        let previewNames = names.prefix(10).map { "• \($0)" }.joined(separator: "\n")
+        if names.count > 10 {
+            return "\(previewNames)\n• ...and \(names.count - 10) more"
+        }
+        return previewNames
+    }
+
     // MARK: - Helpers
 
     private func matchesFilter(_ torrent: Torrent, filter: TorrentFilter) -> Bool {
@@ -718,6 +764,136 @@ private struct ToastView: View {
         .padding(.vertical, 10)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 4)
+    }
+}
+
+private struct CompletedTorrentRemoveSheet: View {
+    private enum ActionButtonFocus: Hashable {
+        case cancel
+        case confirm
+    }
+
+    let torrents: [Torrent]
+    let onCancel: () -> Void
+    let onRemove: ([Int]) -> Void
+    @State private var selectedIds: Set<Int> = []
+    @FocusState private var focusedAction: ActionButtonFocus?
+
+    init(torrents: [Torrent], onCancel: @escaping () -> Void, onRemove: @escaping ([Int]) -> Void) {
+        self.torrents = torrents
+        self.onCancel = onCancel
+        self.onRemove = onRemove
+        _selectedIds = State(initialValue: Set(torrents.map(\.id)))
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Remove Completed Torrents")
+                .font(.headline)
+            Text("Review completed torrents below. Remove deletes from the list only and keeps downloaded files.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 8) {
+                Button("Select All") {
+                    selectedIds = Set(torrents.map(\.id))
+                }
+                .buttonStyle(.link)
+                .focusable(false)
+
+                Button("Clear Selection") {
+                    selectedIds.removeAll()
+                }
+                .buttonStyle(.link)
+                .focusable(false)
+
+                Spacer()
+            }
+
+            List(torrents, id: \.id) { torrent in
+                HStack(spacing: 10) {
+                    Toggle("", isOn: Binding(
+                        get: { selectedIds.contains(torrent.id) },
+                        set: { isChecked in
+                            if isChecked {
+                                selectedIds.insert(torrent.id)
+                            } else {
+                                selectedIds.remove(torrent.id)
+                            }
+                        }
+                    ))
+                    .toggleStyle(.checkbox)
+                    .labelsHidden()
+                    .focusable(false)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(torrent.name)
+                            .lineLimit(1)
+                        Text(formatBytes(torrent.totalSize))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+                .padding(.vertical, 2)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if selectedIds.contains(torrent.id) {
+                        selectedIds.remove(torrent.id)
+                    } else {
+                        selectedIds.insert(torrent.id)
+                    }
+                }
+            }
+            .frame(minHeight: 280)
+
+            HStack {
+                Text("\(selectedIds.count)/\(torrents.count) selected")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Cancel", action: onCancel)
+                    .focused($focusedAction, equals: .cancel)
+                Button("Remove from List", role: .destructive) {
+                    onRemove(Array(selectedIds))
+                }
+                .disabled(selectedIds.isEmpty)
+                .focused($focusedAction, equals: .confirm)
+            }
+        }
+        .padding(16)
+        .frame(minWidth: 620, minHeight: 420)
+        .onAppear {
+            selectedIds = Set(torrents.map(\.id))
+            focusedAction = .confirm
+        }
+        .onChange(of: torrents.map(\.id)) { _, newIds in
+            selectedIds = Set(newIds)
+        }
+        .onKeyPress(.tab) {
+            focusedAction = (focusedAction == .confirm) ? .cancel : .confirm
+            return .handled
+        }
+        .onKeyPress(.return) {
+            if focusedAction == .cancel {
+                onCancel()
+                return .handled
+            }
+            if !selectedIds.isEmpty {
+                onRemove(Array(selectedIds))
+            }
+            return .handled
+        }
+        .onKeyPress(.escape) {
+            onCancel()
+            return .handled
+        }
+    }
+
+    private func formatBytes(_ value: Int64) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .file
+        return formatter.string(fromByteCount: value)
     }
 }
 
