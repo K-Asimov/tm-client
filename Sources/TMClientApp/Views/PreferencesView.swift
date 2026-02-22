@@ -2,6 +2,7 @@ import SwiftUI
 import TMCore
 
 struct PreferencesView: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: AppViewModel
     @State private var settings: SessionSettings
     @State private var connection: RPCConnection
@@ -44,6 +45,7 @@ struct PreferencesView: View {
         .onChange(of: viewModel.sessionSettings) { _, newValue in
             if let newValue { settings = newValue }
         }
+        .onExitCommand(perform: cancelAndClose)
     }
 
     private func syncFromViewModel() {
@@ -55,6 +57,11 @@ struct PreferencesView: View {
         deleteTorrentFile = viewModel.deleteTorrentFile
         autoAddClipboard = viewModel.autoAddClipboard
         portString = String(connection.port)
+    }
+
+    private func cancelAndClose() {
+        syncFromViewModel()
+        dismiss()
     }
 
     // MARK: - Save helpers
