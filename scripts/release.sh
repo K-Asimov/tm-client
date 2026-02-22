@@ -40,6 +40,7 @@ echo "    Updated $PBXPROJ"
 # --- 2. Update CHANGELOG.md ---
 DATE=$(date +%Y-%m-%d)
 CHANGELOG="CHANGELOG.md"
+PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || true)
 
 if [ ! -f "$CHANGELOG" ]; then
   cat > "$CHANGELOG" <<EOF
@@ -51,50 +52,89 @@ EOF
 fi
 
 TEMP=$(mktemp)
-# Read header lines until the first "## [" entry (or end of header)
-HEADER_DONE=false
-while IFS= read -r line; do
-  if [[ "$line" == "## ["* ]]; then
-    HEADER_DONE=true
-    # Insert new entry before first existing entry
-    cat >> "$TEMP" <<EOF
+ENTRY=$(mktemp)
+ADDED_ITEMS=$(mktemp)
+FIXED_ITEMS=$(mktemp)
+CHANGED_ITEMS=$(mktemp)
+trap 'rm -f "$TEMP" "$ENTRY" "$ADDED_ITEMS" "$FIXED_ITEMS" "$CHANGED_ITEMS"' EXIT
 
-## [$VERSION] - $DATE
-
-### Added
--
-
-### Fixed
--
-
-EOF
-  fi
-  echo "$line" >> "$TEMP"
-  if $HEADER_DONE; then
-    # Append rest of file
-    break
-  fi
-done < "$CHANGELOG"
-
-if ! $HEADER_DONE; then
-  # No existing entries — append at end
-  cat >> "$TEMP" <<EOF
-
-## [$VERSION] - $DATE
-
-### Added
--
-
-### Fixed
--
-
-EOF
+if [ -n "$PREV_TAG" ]; then
+  echo "    Collecting commits from $PREV_TAG..HEAD"
+  LOG_RANGE="$PREV_TAG..HEAD"
+else
+  echo "    No previous tag found. Collecting all commits up to HEAD"
+  LOG_RANGE="HEAD"
 fi
 
-# Append remaining lines (after the first "## [" line)
-if $HEADER_DONE; then
-  tail -n +$(grep -n "^## \[" "$CHANGELOG" | head -1 | cut -d: -f1) "$CHANGELOG" | tail -n +2 >> "$TEMP"
+while IFS= read -r subject; do
+  [ -z "$subject" ] && continue
+
+  cleaned_subject=$(echo "$subject" | sed -E 's/^(feat|fix|chore|docs|refactor|perf|test|build|ci|style)(\([^)]+\))?!?:[[:space:]]*//')
+  [ -z "$cleaned_subject" ] && cleaned_subject="$subject"
+  lower_subject=$(echo "$subject" | tr '[:upper:]' '[:lower:]')
+
+  case "$lower_subject" in
+    feat*|add*)
+      printf -- "- %s\n" "$cleaned_subject" >> "$ADDED_ITEMS"
+      ;;
+    fix*|bugfix*|hotfix*)
+      printf -- "- %s\n" "$cleaned_subject" >> "$FIXED_ITEMS"
+      ;;
+    *)
+      printf -- "- %s\n" "$cleaned_subject" >> "$CHANGED_ITEMS"
+      ;;
+  esac
+done < <(git log --pretty=format:'%s' "$LOG_RANGE")
+
+if [ ! -s "$ADDED_ITEMS" ] && [ ! -s "$FIXED_ITEMS" ] && [ ! -s "$CHANGED_ITEMS" ]; then
+  printf -- "- No user-facing changes recorded\n" >> "$CHANGED_ITEMS"
 fi
+
+{
+  echo ""
+  echo "## [$VERSION] - $DATE"
+  echo ""
+
+  if [ -s "$ADDED_ITEMS" ]; then
+    echo "### Added"
+    cat "$ADDED_ITEMS"
+    echo ""
+  fi
+
+  if [ -s "$FIXED_ITEMS" ]; then
+    echo "### Fixed"
+    cat "$FIXED_ITEMS"
+    echo ""
+  fi
+
+  if [ -s "$CHANGED_ITEMS" ]; then
+    echo "### Changed"
+    cat "$CHANGED_ITEMS"
+    echo ""
+  fi
+} > "$ENTRY"
+
+awk -v entry_file="$ENTRY" '
+BEGIN {
+  while ((getline line < entry_file) > 0) {
+    entry = entry line ORS
+  }
+  close(entry_file)
+  inserted = 0
+}
+{
+  if (!inserted && $0 ~ /^## \[/) {
+    printf "%s", entry
+    inserted = 1
+  }
+  print
+}
+END {
+  if (!inserted) {
+    printf "%s", entry
+  }
+}
+' "$CHANGELOG" > "$TEMP"
 
 mv "$TEMP" "$CHANGELOG"
 echo "    Updated $CHANGELOG"
