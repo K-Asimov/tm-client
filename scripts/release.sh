@@ -16,10 +16,23 @@ if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 TAG="v$VERSION"
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # Check if tag already exists
 if git rev-parse "$TAG" >/dev/null 2>&1; then
   echo "Error: Tag $TAG already exists"
+  exit 1
+fi
+
+# Check if tag already exists on remote
+if [ -n "$(git ls-remote --tags origin "refs/tags/$TAG")" ]; then
+  echo "Error: Tag $TAG already exists on origin"
+  exit 1
+fi
+
+# Guard against detached HEAD
+if [ "$CURRENT_BRANCH" = "HEAD" ]; then
+  echo "Error: You are in detached HEAD state. Please checkout a branch first."
   exit 1
 fi
 
@@ -169,6 +182,10 @@ RELEASE_COMMIT=$(git rev-parse HEAD)
 git tag -a "$TAG" "$RELEASE_COMMIT" -m "Release $TAG ($DATE)"
 echo "    Created tag $TAG"
 
+# --- 5. Push branch and tag ---
+git push origin "$CURRENT_BRANCH"
+git push origin "$TAG"
+echo "    Pushed $CURRENT_BRANCH and $TAG to origin"
+
 echo ""
-echo "Done! Push with:"
-echo "  git push origin main --tags"
+echo "Done! Release completed and pushed."
