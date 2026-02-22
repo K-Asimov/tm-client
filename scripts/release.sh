@@ -56,7 +56,8 @@ ENTRY=$(mktemp)
 ADDED_ITEMS=$(mktemp)
 FIXED_ITEMS=$(mktemp)
 CHANGED_ITEMS=$(mktemp)
-trap 'rm -f "$TEMP" "$ENTRY" "$ADDED_ITEMS" "$FIXED_ITEMS" "$CHANGED_ITEMS"' EXIT
+COMMIT_LOG_ITEMS=$(mktemp)
+trap 'rm -f "$TEMP" "$ENTRY" "$ADDED_ITEMS" "$FIXED_ITEMS" "$CHANGED_ITEMS" "$COMMIT_LOG_ITEMS"' EXIT
 
 if [ -n "$PREV_TAG" ]; then
   echo "    Collecting commits from $PREV_TAG..HEAD"
@@ -66,12 +67,15 @@ else
   LOG_RANGE="HEAD"
 fi
 
-while IFS= read -r subject; do
+while IFS= read -r line; do
+  commit_hash="${line%%$'\t'*}"
+  subject="${line#*$'\t'}"
   [ -z "$subject" ] && continue
 
   cleaned_subject=$(echo "$subject" | sed -E 's/^(feat|fix|chore|docs|refactor|perf|test|build|ci|style)(\([^)]+\))?!?:[[:space:]]*//')
   [ -z "$cleaned_subject" ] && cleaned_subject="$subject"
   lower_subject=$(echo "$subject" | tr '[:upper:]' '[:lower:]')
+  printf -- "- %s %s\n" "$commit_hash" "$subject" >> "$COMMIT_LOG_ITEMS"
 
   case "$lower_subject" in
     feat*|add*)
@@ -84,10 +88,13 @@ while IFS= read -r subject; do
       printf -- "- %s\n" "$cleaned_subject" >> "$CHANGED_ITEMS"
       ;;
   esac
-done < <(git log --pretty=format:'%s' "$LOG_RANGE")
+done < <(git log --pretty=format:'%h%x09%s' "$LOG_RANGE")
 
 if [ ! -s "$ADDED_ITEMS" ] && [ ! -s "$FIXED_ITEMS" ] && [ ! -s "$CHANGED_ITEMS" ]; then
   printf -- "- No user-facing changes recorded\n" >> "$CHANGED_ITEMS"
+fi
+if [ ! -s "$COMMIT_LOG_ITEMS" ]; then
+  printf -- "- No commits found\n" >> "$COMMIT_LOG_ITEMS"
 fi
 
 {
@@ -139,18 +146,27 @@ END {
 mv "$TEMP" "$CHANGELOG"
 echo "    Updated $CHANGELOG"
 
-# --- 3. Open CHANGELOG for editing ---
-echo ""
-echo "Please review and edit CHANGELOG.md for this release, then press Enter to continue..."
-${EDITOR:-vi} "$CHANGELOG"
-
-# --- 4. Commit ---
+# --- 3. Commit ---
 git add "$PBXPROJ" "$CHANGELOG"
-git commit -m "chore: release $TAG"
+if [ -n "$PREV_TAG" ]; then
+  CHANGES_SCOPE="Changes since $PREV_TAG:"
+else
+  CHANGES_SCOPE="Changes in this release:"
+fi
+git commit -m "$(cat <<EOF
+chore: release $TAG
+
+Release $TAG ($DATE)
+
+$CHANGES_SCOPE
+$(cat "$COMMIT_LOG_ITEMS")
+EOF
+)"
 echo "    Committed changes"
 
-# --- 5. Create annotated tag ---
-git tag -a "$TAG" -m "Release $TAG"
+# --- 4. Create annotated tag ---
+RELEASE_COMMIT=$(git rev-parse HEAD)
+git tag -a "$TAG" "$RELEASE_COMMIT" -m "Release $TAG ($DATE)"
 echo "    Created tag $TAG"
 
 echo ""
