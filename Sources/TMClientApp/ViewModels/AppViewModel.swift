@@ -39,6 +39,8 @@ final class AppViewModel: ObservableObject {
     @Published var alertInfo: AlertInfo?
     // Toast for success/error feedback
     @Published var toast: ToastInfo?
+    // ID of a newly added torrent to be selected in the list
+    @Published var pendingSelectionId: Int?
     // Whether the app has successfully connected at least once this session
     @Published var hasConnected = false
     // Whether auto-refresh is temporarily paused (e.g. during sheet editing)
@@ -177,8 +179,12 @@ final class AppViewModel: ObservableObject {
     }
 
     func addTorrent(url: String, downloadDir: String?, startPaused: Bool) async {
+        var addedId: Int?
         await handleAction(successMessage: "Torrent added successfully") {
-            try await client.addTorrent(fromURL: url, downloadDir: downloadDir, startPaused: startPaused)
+            addedId = try await client.addTorrent(fromURL: url, downloadDir: downloadDir, startPaused: startPaused)
+        }
+        if let id = addedId {
+            pendingSelectionId = id
         }
     }
 
@@ -194,8 +200,9 @@ final class AppViewModel: ObservableObject {
     }
 
     private func performFileAdd(data: Data, url: URL?, downloadDir: String?, startPaused: Bool) async {
+        var addedId: Int?
         await handleAction(successMessage: "Torrent file added successfully") {
-            try await self.client.addTorrent(fromData: data, downloadDir: downloadDir, startPaused: startPaused)
+            addedId = try await self.client.addTorrent(fromData: data, downloadDir: downloadDir, startPaused: startPaused)
 
             // Delete the file if the setting is enabled and a URL is provided
             if self.deleteTorrentFile, let url = url {
@@ -208,6 +215,9 @@ final class AppViewModel: ObservableObject {
                     logger.error("Failed to delete torrent file: \(error.localizedDescription)")
                 }
             }
+        }
+        if let id = addedId {
+            pendingSelectionId = id
         }
     }
 

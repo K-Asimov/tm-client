@@ -101,15 +101,17 @@ public final class RPCClient {
         )
     }
 
-    public func addTorrent(fromURL url: String, downloadDir: String?, startPaused: Bool) async throws {
+    public func addTorrent(fromURL url: String, downloadDir: String?, startPaused: Bool) async throws -> Int? {
         var args: [String: Any] = ["filename": url, "paused": startPaused]
         if let downloadDir, !downloadDir.isEmpty {
             args["download-dir"] = downloadDir
         }
-        _ = try await call(method: "torrent-add", arguments: args)
+        let response = try await call(method: "torrent-add", arguments: args)
+        let torrentInfo = response["torrent-added"] as? [String: Any] ?? response["torrent-duplicate"] as? [String: Any]
+        return torrentInfo?["id"] as? Int
     }
 
-    public func addTorrent(fromData data: Data, downloadDir: String?, startPaused: Bool) async throws {
+    public func addTorrent(fromData data: Data, downloadDir: String?, startPaused: Bool) async throws -> Int? {
         var args: [String: Any] = [
             "metainfo": data.base64EncodedString(),
             "paused": startPaused
@@ -117,7 +119,9 @@ public final class RPCClient {
         if let downloadDir, !downloadDir.isEmpty {
             args["download-dir"] = downloadDir
         }
-        _ = try await call(method: "torrent-add", arguments: args)
+        let response = try await call(method: "torrent-add", arguments: args)
+        let torrentInfo = response["torrent-added"] as? [String: Any] ?? response["torrent-duplicate"] as? [String: Any]
+        return torrentInfo?["id"] as? Int
     }
 
     public func verifyTorrents(ids: [Int]) async throws {

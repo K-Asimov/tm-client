@@ -478,6 +478,12 @@ struct ContentView: View {
                 viewModel.selectedTorrentDetail = nil
             }
         }
+        .onChange(of: viewModel.pendingSelectionId) { _, newId in
+            if let id = newId {
+                selected = [id]
+                viewModel.pendingSelectionId = nil
+            }
+        }
     }
 
     // MARK: - Empty States
