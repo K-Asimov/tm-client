@@ -19,8 +19,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Prevent opening a new window via Cmd+N, etc.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        bringWindowToFront()
-        return false
+        if flag {
+            bringWindowToFront()
+            return false
+        }
+        // No visible windows — let SwiftUI re-show the window
+        return true
     }
 
     private func bringWindowToFront() {
