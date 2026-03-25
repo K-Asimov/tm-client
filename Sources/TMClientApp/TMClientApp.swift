@@ -9,6 +9,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.setActivationPolicy(.regular)
     }
 
+    // Called by AppKit before SwiftUI can intercept — returning true prevents new window creation
+    func application(_ application: NSApplication, openFile filename: String) -> Bool {
+        let url = URL(fileURLWithPath: filename)
+        guard url.pathExtension.lowercased() == "torrent" else { return false }
+        bringWindowToFront()
+        onOpenFile?(url)
+        return true
+    }
+
+    func application(_ application: NSApplication, openFiles filenames: [String]) {
+        bringWindowToFront()
+        for filename in filenames {
+            let url = URL(fileURLWithPath: filename)
+            guard url.pathExtension.lowercased() == "torrent" else { continue }
+            onOpenFile?(url)
+        }
+        NSApp.reply(toOpenOrPrint: .success)
+    }
+
     func application(_ application: NSApplication, open urls: [URL]) {
         // Bring the existing window to the front (prevent creating a new window)
         bringWindowToFront()
